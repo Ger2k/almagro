@@ -19,7 +19,8 @@ export default function Home() {
 
   return (
     <>
-      <nav className="h-screen w-64 text-[#171725] fixed flex flex-col">
+      <nav className="h-screen w-64 text-[#171725] fixed flex flex-col border-r-2 border-r-[#00000014]">
+
         <div className="logo p-4">
           <img 
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSejBYMhS5LNGSoI5DZEjM6fNfuH8Bf--8-U43aoDj9eQ&s" 
