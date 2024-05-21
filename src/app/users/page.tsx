@@ -50,6 +50,11 @@ const Users = () => {
       });
   };
 
+  const closeModal = () => {
+    setSelectedUser(null);
+    setIsAddUserModalOpen(false);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Usuarios</h1>
@@ -78,21 +83,26 @@ const Users = () => {
 
       {/* Modal de detalles del usuario */}
       {selectedUser && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded flex flex-col items-center">
-            <img className='mb-2' src={selectedUser.avatar} alt={`${selectedUser.first_name} ${selectedUser.last_name}`} />
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeModal}>
+          <div className="bg-white p-4 rounded flex flex-col items-center" onClick={e => e.stopPropagation()}>
+            <img src={selectedUser.avatar} alt={`${selectedUser.first_name} ${selectedUser.last_name}`} className="mb-4" />
             <p>Nombre: {selectedUser.first_name}</p>
             <p>Apellido: {selectedUser.last_name}</p>
             <p>Email: {selectedUser.email}</p>
-            <button onClick={() => setSelectedUser(null)} className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mt-4 hover:bg-[#61A89F]">Cerrar</button>
+            <button 
+              onClick={() => setSelectedUser(null)} 
+              className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mt-4 hover:bg-[#61A89F]"
+            >
+              Cerrar
+            </button>
           </div>
         </div>
       )}
 
       {/* Modal para añadir un nuevo usuario */}
       {isAddUserModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-4 rounded">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeModal}>
+          <div className="bg-white p-4 rounded" onClick={e => e.stopPropagation()}>
             <h2 className="text-xl mb-4">Añadir Nuevo Usuario</h2>
             <input 
               type="text"
@@ -113,7 +123,8 @@ const Users = () => {
               type="email"
               placeholder="Email"
               value={newUser.email}
-              onChange={e => setNewUser({ ...newUser, email: e.target.value })}
+              onChange={
+              e => setNewUser({ ...newUser, email: e.target.value })}
               className="border p-2 mb-4 w-full"
             />
             <select 
@@ -127,7 +138,7 @@ const Users = () => {
               <option value="DevOps">DevOps</option>
               <option value="Design">Design</option>
             </select>
-            <div className="flex flex-row-reverse gap-2">
+            <div className='flex flex-row-reverse gap-2'>
               <button 
                 onClick={handleAddUser}
                 className="bg-blue-500 text-white p-2 rounded"
