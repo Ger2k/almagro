@@ -41,7 +41,7 @@ export default function RootLayout({
           key={link.name}
           href={link.href}
           className={`flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:text-[#cdfff9] hover:bg-[#33615b] md:flex-none md:justify-start md:p-2 md:px-3
-          ${pathname === link.href ? 'bg-[#61A89F] text-[#cdfff9]' : 'text-gray-900'}`}
+          ${pathname === link.href ? 'bg-[#5bb3a7] text-black-400' : 'text-gray-900'}`}
           >
           <p className="hidden md:block">{link.name}</p>
           </Link>
