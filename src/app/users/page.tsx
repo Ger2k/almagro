@@ -2,6 +2,17 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
 
 interface User {
   id: number;
@@ -58,28 +69,27 @@ const Users = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Usuarios</h1>
-      <button 
+      <Button 
         className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mb-4 hover:bg-[#61A89F]"
         onClick={() => setIsAddUserModalOpen(true)}
-      >
-        Añadir Usuario
-      </button>
-      <table className="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th className="py-2">Nombre</th>
-            <th className="py-2">Email</th>
-          </tr>
-        </thead>
-        <tbody>
+        variant="outline">Añadir Usuario
+      </Button>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="py-2 font-bold">Nombre</TableHead>
+            <TableHead className="py-2 font-bold">Email</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {users.map(user => (
-            <tr key={user.id} onClick={() => setSelectedUser(user)} className="cursor-pointer">
-              <td className="border px-4 py-2">{`${user.first_name} ${user.last_name}`}</td>
-              <td className="border px-4 py-2">{user.email}</td>
-            </tr>
+            <TableRow key={user.id} onClick={() => setSelectedUser(user)} className="cursor-pointer">
+              <TableCell className="border px-4 py-2">{`${user.first_name} ${user.last_name}`}</TableCell>
+              <TableCell className="border px-4 py-2">{user.email}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
 
       {/* Modal de detalles del usuario */}
       {selectedUser && (
@@ -89,12 +99,12 @@ const Users = () => {
             <p>Nombre: {selectedUser.first_name}</p>
             <p>Apellido: {selectedUser.last_name}</p>
             <p>Email: {selectedUser.email}</p>
-            <button 
+            <Button 
               onClick={() => setSelectedUser(null)} 
-              className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mt-4 hover:bg-[#61A89F]"
+              className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mt-4 hover:bg-[#61A89F] hover:text-black"
             >
               Cerrar
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -138,19 +148,18 @@ const Users = () => {
               <option value="DevOps">DevOps</option>
               <option value="Design">Design</option>
             </select>
-            <div className='flex flex-row-reverse gap-2'>
-              <button 
+            <div className='flex flex-row-reverse gap-2'>              
+              <Button 
+                className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 hover:bg-[#61A89F]"
                 onClick={handleAddUser}
-                className="bg-blue-500 text-white p-2 rounded"
-              >
-                Añadir Usuario
-              </button>
-              <button 
+                variant="outline">Añadir Usuario
+              </Button>
+              <Button 
                 onClick={() => setIsAddUserModalOpen(false)}
-                className="bg-red-500 text-white p-2 rounded"
+                className=" text-black p-2 rounded"
               >
                 Cancelar
-              </button>
+              </Button>
             </div>
           </div>
         </div>
