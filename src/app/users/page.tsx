@@ -95,7 +95,7 @@ const Users = () => {
       {selectedUser && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeModal}>
           <div className="bg-white p-4 rounded flex flex-col items-center" onClick={e => e.stopPropagation()}>
-            <img src={selectedUser.avatar} alt={`${selectedUser.first_name} ${selectedUser.last_name}`} className="mb-4" />
+            <img src={selectedUser.avatar} alt={`${selectedUser.first_name} ${selectedUser.last_name}`} className="mb-4 rounded-[50%]" />
             <p>Nombre: {selectedUser.first_name}</p>
             <p>Apellido: {selectedUser.last_name}</p>
             <p>Email: {selectedUser.email}</p>
@@ -111,9 +111,10 @@ const Users = () => {
 
       {/* Modal para añadir un nuevo usuario */}
       {isAddUserModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeModal}>
-          <div className="bg-white p-4 rounded" onClick={e => e.stopPropagation()}>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 w-full" onClick={closeModal}>
+          <div className="bg-white p-4 rounded w-[700px]" onClick={e => e.stopPropagation()}>
             <h2 className="text-xl mb-4">Añadir Nuevo Usuario</h2>
+            {formErrors.first_name && <p className="text-red-500 italic">{formErrors.first_name}</p>}
             <input 
               type="text"
               placeholder="Nombre"
@@ -121,7 +122,6 @@ const Users = () => {
               onChange={e => setNewUser({ ...newUser, first_name: e.target.value })}
               className="border p-2 mb-4 w-full"
             />
-            {formErrors.first_name && <p className="text-red-500">{formErrors.first_name}</p>}
             <input 
               type="text"
               placeholder="Apellido"
