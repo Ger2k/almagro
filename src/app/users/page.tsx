@@ -67,7 +67,7 @@ const Users = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 md:mt-0 mt-4 md:ml-[268px]">
       <h1 className="text-2xl font-bold mb-4">Usuarios</h1>
       <Button 
         className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mb-4 hover:bg-[#61A89F]"
@@ -94,17 +94,13 @@ const Users = () => {
       {/* Modal de detalles del usuario */}
       {selectedUser && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeModal}>
-          <div className="bg-white p-4 rounded flex flex-col items-center" onClick={e => e.stopPropagation()}>
-            <img src={selectedUser.avatar} alt={`${selectedUser.first_name} ${selectedUser.last_name}`} className="mb-4 rounded-[50%]" />
-            <p>Nombre: {selectedUser.first_name}</p>
-            <p>Apellido: {selectedUser.last_name}</p>
-            <p>Email: {selectedUser.email}</p>
-            <Button 
-              onClick={() => setSelectedUser(null)} 
-              className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mt-4 hover:bg-[#61A89F] hover:text-black"
-            >
-              Cerrar
-            </Button>
+          <div className="bg-white p-4 rounded flex flex-row items-center" onClick={e => e.stopPropagation()}>
+            <img src={selectedUser.avatar} alt={`${selectedUser.first_name} ${selectedUser.last_name}`} className="mr-8 rounded-[50%] border-[3px] border-[#83DCD1]" />
+            <div className="mr-8">
+              <p>Nombre: {selectedUser.first_name}</p>
+              <p>Apellido: {selectedUser.last_name}</p>
+              <p>Email: {selectedUser.email}</p>              
+            </div>
           </div>
         </div>
       )}
@@ -152,7 +148,15 @@ const Users = () => {
               <Button 
                 className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 hover:bg-[#61A89F]"
                 onClick={handleAddUser}
-                variant="outline">Añadir Usuario
+                variant="outline">
+                  Añadir Usuario
+                  <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-user-plus ml-1" width="16" height="16" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                    <path d="M16 19h6" />
+                    <path d="M19 16v6" />
+                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4" />
+                  </svg>
               </Button>
               <Button 
                 onClick={() => setIsAddUserModalOpen(false)}
