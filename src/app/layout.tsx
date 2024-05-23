@@ -59,7 +59,7 @@ export default function RootLayout({
             )
           })}
         </nav>
-      <main className="md:ml-64 p-4">
+      <main className="md:ml-64 ml-0 p-4">
         {children}
       </main>
       </body>

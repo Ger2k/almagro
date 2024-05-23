@@ -67,7 +67,7 @@ const Users = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 m-auto">
+    <div className="container md:mt-0 mt-16 mx-auto p-4 m-auto">
       <h1 className="text-2xl font-bold mb-4">Usuarios</h1>
       <Button 
         className="bg-[#83DCD1] border border-[#83DCD1] rounded-[4px] opacity-100 text-white p-2 mb-4 hover:bg-[#61A89F]"
