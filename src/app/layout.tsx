@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={workSans.className}>
-        <nav className="md:h-screen h-12 w-screen md:w-64 text-[#171725] fixed flex md:flex-col flex-row border-r-2 mb-8 border-r-[#707070] shadow-[1px_0px_4px_#00000014]">
+        <nav className="md:h-screen h-12 w-screen md:w-64 text-[#171725] fixed flex md:flex-col flex-row border-r-2 border-r-[#707070] shadow-[1px_0px_4px_#00000014]">
           <div className="logo p-4 mb-4 hidden md:block">
               <Image
                 width={222} 

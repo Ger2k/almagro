@@ -11,7 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { AddUserButton } from '@/components/ui/addUserButton';
+import UserDetailModal from '@/components/ui/UserDetailModal';
+import AddUserModal from '@/components/ui/AddUserModal';
+import Image from 'next/image';
+import ConfirmDeleteModal from '@/components/ui/ConfirmDeleteModal';
+import { toast } from '@/components/ui/use-toast';
+import { useToast } from "@/components/ui/use-toast"
 
 
 interface User {
@@ -28,6 +33,9 @@ const Users = () => {
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [newUser, setNewUser] = useState({ first_name: '', last_name: '', email: '', role: '' });
   const [formErrors, setFormErrors] = useState({ first_name: '' });
+  const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const { toast } = useToast()
 
   useEffect(() => {
     fetch('https://reqres.in/api/users')
@@ -45,9 +53,63 @@ const Users = () => {
       });
   }, []);  
 
+  const handleAddUser = () => {
+    // Validación del nombre
+    if (newUser.first_name.length < 5) {
+      setFormErrors({ first_name: 'El nombre debe tener al menos 5 caracteres' });
+      return;
+    }
+
+    fetch('https://reqres.in/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newUser)
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setUsers([...users, data]);
+        setIsAddUserModalOpen(false);
+        setNewUser({ first_name: '', last_name: '', email: '', role: '' });
+      })
+      .catch(error => {
+        console.error('Error adding user:', error);
+      });
+  };
+
+  const handleDeleteUser = () => {
+    if (userToDelete) {
+      fetch(`https://reqres.in/api/users/${userToDelete.id}`, {
+        method: 'DELETE',
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          setUsers(users.filter(user => user.id !== userToDelete.id));
+          setIsConfirmDeleteModalOpen(false);
+          setUserToDelete(null);
+          toast({
+            title: "Usuario eliminado correctamente",
+          })
+        })
+        .catch(error => {
+          console.error('Error deleting user:', error);
+        });
+    }
+  };
+
   const closeModal = () => {
     setSelectedUser(null);
     setIsAddUserModalOpen(false);
+    setIsConfirmDeleteModalOpen(false);
+    setUserToDelete(null);
   };
 
   return (
@@ -62,81 +124,66 @@ const Users = () => {
           <TableRow>
             <TableHead>Nombre</TableHead>
             <TableHead>Email</TableHead>
+            <TableHead>Acciones</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.map(user => (
-            <TableRow key={user.id} onClick={() => setSelectedUser(user)} className="cursor-pointer">
+            <TableRow key={user.id}>
               <TableCell>{`${user.first_name} ${user.last_name}`}</TableCell>
               <TableCell>{user.email}</TableCell>
+              <TableCell>
+                <Button 
+                  onClick={() => setSelectedUser(user)}
+                  variant="default"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                  <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+                </svg>
+                </Button>
+                <Button 
+                onClick={() => {
+                  setUserToDelete(user);
+                  setIsConfirmDeleteModalOpen(true);
+                }} 
+                variant="default"
+                className="ml-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                  <path d="M4 7l16 0" />
+                  <path d="M10 11l0 6" />
+                  <path d="M14 11l0 6" />
+                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                </svg>
+              </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      {/* Modal de detalles del usuario */}
       {selectedUser && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" onClick={closeModal}>
-          <div className="bg-white p-4 rounded flex flex-row items-center" onClick={e => e.stopPropagation()}>
-            <img src={selectedUser.avatar} alt={`${selectedUser.first_name} ${selectedUser.last_name}`} className="mr-8 rounded-[50%] border-[3px] border-[#83DCD1]" />
-            <div className="mr-8">
-              <p>Nombre: {selectedUser.first_name}</p>
-              <p>Apellido: {selectedUser.last_name}</p>
-              <p>Email: {selectedUser.email}</p>              
-            </div>
-          </div>
-        </div>
+        <UserDetailModal user={selectedUser} onClose={closeModal} />
       )}
 
-      {/* Modal para añadir un nuevo usuario */}
       {isAddUserModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 w-full" onClick={closeModal}>
-          <div className="bg-white p-4 rounded w-[700px]" onClick={e => e.stopPropagation()}>
-            <h2 className="text-xl mb-4">Añadir Nuevo Usuario</h2>
-            {formErrors.first_name && <p className="text-red-500 italic">{formErrors.first_name}</p>}
-            <input 
-              type="text"
-              placeholder="Nombre"
-              value={newUser.first_name}
-              onChange={e => setNewUser({ ...newUser, first_name: e.target.value })}
-              className="border p-2 mb-4 w-full"
-            />
-            <input 
-              type="text"
-              placeholder="Apellido"
-              value={newUser.last_name}
-              onChange={e => setNewUser({ ...newUser, last_name: e.target.value })}
-              className="border p-2 mb-4 w-full"
-            />
-            <input 
-              type="email"
-              placeholder="Email"
-              value={newUser.email}
-              onChange={
-              e => setNewUser({ ...newUser, email: e.target.value })}
-              className="border p-2 mb-4 w-full"
-            />
-            <select 
-              value={newUser.role}
-              onChange={e => setNewUser({ ...newUser, role: e.target.value })}
-            >
-              <option value="">Seleccionar Rol</option>
-              <option value="Frontend">Frontend</option>
-              <option value="Backend">Backend</option>
-              <option value="DevOps">DevOps</option>
-              <option value="Design">Design</option>
-            </select>
-            <div className='flex flex-row-reverse gap-2'>
-              <AddUserButton />
-              <Button 
-                onClick={() => setIsAddUserModalOpen(false)}
-                variant="ghost"
-              >
-                Cancelar
-              </Button>
-            </div>
-          </div>
-        </div>
+        <AddUserModal 
+          newUser={newUser}
+          setNewUser={setNewUser}
+          formErrors={formErrors}
+          onSubmit={handleAddUser}
+          onClose={closeModal}
+        />
+      )}
+      {isConfirmDeleteModalOpen && (
+        <ConfirmDeleteModal 
+          onConfirm={handleDeleteUser}
+          onClose={closeModal}
+        />
       )}
     </div>
   );

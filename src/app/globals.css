@@ -14,23 +14,5 @@ select option{
   margin: 12px;
 }
 select option:nth-child(odd) {
-  background-color: #B8F2EB; /* Color de fondo para opciones impares */
+  background-color: #B8F2EB;
 }
-select:focus-visible{
-  
-}
-/*
-
-              className="border p-2 mb-4 w-full"
-body {
-  font-family: 'Work Sans', sans-serif;
-}
-
-.hover-bg-nav {
-  @apply hover:bg-[#83DCD1]/[0.15];
-}
-
-.hover-text-nav {
-  @apply hover:text-[#83DCD1]/[1];
-}
-*/
