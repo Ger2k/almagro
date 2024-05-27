@@ -21,8 +21,6 @@ const links = [
   },
 ];
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
