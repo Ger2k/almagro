@@ -4,7 +4,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+select {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 12px;
+  border: #61A89F;
+}
+select option{
+  margin: 12px;
+}
+select option:nth-child(odd) {
+  background-color: #B8F2EB; /* Color de fondo para opciones impares */
+}
+select:focus-visible{
+  
+}
 /*
+
+              className="border p-2 mb-4 w-full"
 body {
   font-family: 'Work Sans', sans-serif;
 }
