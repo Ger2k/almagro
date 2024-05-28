@@ -32,7 +32,7 @@ const Users = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [newUser, setNewUser] = useState({ first_name: '', last_name: '', email: '', role: '' });
-  const [formErrors, setFormErrors] = useState({ first_name: '' });
+  const [formErrors, setFormErrors] = useState({ first_name: '', email: '' });
   const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const { toast } = useToast()
@@ -54,12 +54,26 @@ const Users = () => {
   }, []);  
 
   const handleAddUser = () => {
-    // Validación del nombre
+    const errors = { first_name: '', email: '' };
+  
     if (newUser.first_name.length < 5) {
-      setFormErrors({ first_name: 'El nombre debe tener al menos 5 caracteres' });
+      errors.first_name = 'El nombre debe tener al menos 5 caracteres';
+    }
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newUser.email)) {
+      errors.email = 'El correo electrónico no es válido';
+    }
+  
+    if (errors.first_name || errors.email) {
+      setFormErrors(errors);
       return;
     }
 
+    toast({
+      title: "Usuario añadido correctamente",
+    })
+  
     fetch('https://reqres.in/api/users', {
       method: 'POST',
       headers: {
@@ -82,7 +96,7 @@ const Users = () => {
         console.error('Error adding user:', error);
       });
   };
-
+  
   const handleDeleteUser = () => {
     if (userToDelete) {
       fetch(`https://reqres.in/api/users/${userToDelete.id}`, {
@@ -104,7 +118,6 @@ const Users = () => {
         });
     }
   };
-
   const closeModal = () => {
     setSelectedUser(null);
     setIsAddUserModalOpen(false);
@@ -172,12 +185,13 @@ const Users = () => {
 
       {isAddUserModalOpen && (
         <AddUserModal 
-          newUser={newUser}
-          setNewUser={setNewUser}
-          formErrors={formErrors}
-          onSubmit={handleAddUser}
-          onClose={closeModal}
-        />
+        newUser={newUser}
+        setNewUser={setNewUser}
+        formErrors={formErrors}
+        setFormErrors={setFormErrors}
+        onSubmit={handleAddUser}
+        onClose={closeModal}
+      />
       )}
       {isConfirmDeleteModalOpen && (
         <ConfirmDeleteModal 

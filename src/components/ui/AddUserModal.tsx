@@ -1,16 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { AddUserButton } from '@/components/ui/addUserButton';
+import { AddUserButton } from '@/components/ui/AddUserButton';
 
 interface AddUserModalProps {
   newUser: { first_name: string; last_name: string; email: string; role: string };
   setNewUser: (user: { first_name: string; last_name: string; email: string; role: string }) => void;
-  formErrors: { first_name: string };
+  formErrors: { first_name: string; email: string };
+  setFormErrors: (errors: { first_name: string; email: string }) => void;
   onSubmit: () => void;
   onClose: () => void;
 }
 
-const AddUserModal: React.FC<AddUserModalProps> = ({ newUser, setNewUser, formErrors, onSubmit, onClose }) => {
+const AddUserModal: React.FC<AddUserModalProps> = ({ newUser, setNewUser, formErrors, setFormErrors, onSubmit, onClose }) => {
+  useEffect(() => {
+    validateForm();
+  }, [newUser]);
+
+  const validateForm = () => {
+    const errors = { first_name: '', email: '' };
+  
+    if (newUser.first_name && newUser.first_name.length < 5) {
+      errors.first_name = 'El nombre debe tener al menos 5 caracteres';
+    }
+  
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (newUser.email && !emailRegex.test(newUser.email)) {
+      errors.email = 'El correo electrónico no es válido';
+    }
+  
+    setFormErrors(errors);
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 w-full" onClick={onClose}>
       <div className="bg-white p-4 rounded w-[700px]" onClick={e => e.stopPropagation()}>
@@ -30,6 +50,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ newUser, setNewUser, formEr
           onChange={e => setNewUser({ ...newUser, last_name: e.target.value })}
           className="border p-2 mb-4 w-full"
         />
+        {formErrors.email && <p className="text-red-500 italic">{formErrors.email}</p>}
         <input 
           type="email"
           placeholder="Email"
@@ -40,6 +61,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ newUser, setNewUser, formEr
         <select 
           value={newUser.role}
           onChange={e => setNewUser({ ...newUser, role: e.target.value })}
+          className="border p-2 mb-4 w-full"
         >
           <option value="">Seleccionar Rol</option>
           <option value="Frontend">Frontend</option>
@@ -48,7 +70,9 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ newUser, setNewUser, formEr
           <option value="Design">Design</option>
         </select>
         <div className='flex flex-row-reverse gap-2'>
-          <AddUserButton />
+          <Button onClick={onSubmit} variant="default">
+            Añadir Usuario
+          </Button>
           <Button onClick={onClose} variant="ghost">Cancelar</Button>
         </div>
       </div>
